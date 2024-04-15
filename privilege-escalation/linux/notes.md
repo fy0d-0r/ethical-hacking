@@ -38,7 +38,40 @@ sudo -l
 
 ### Network Informations
 
+```
+netstat -an
+netstat -4anp
+netstat -4lnp
+netstat -at #tcp
+netstat -au #udp
+netstat -l #list listening ports
+netstat -lt4
+netstat -s #satistics
+netstat -i #interface information
+netstat -rn #routing table
+netstat -4ano #o for display timers
+```
+```
+ip addr show
+ip -br -c addr show
+ip route
+ifconfig
+ifconfig -a
+```
 
+### Finding Files
+
+```
+find / -mtime 10	#modified time in last 10 days
+find / -atime 10	#accessed time in last 10 days
+find / -cmin -60	#changed within last 60 mins
+find / -amin -60	#access within last 60 mins
+```
+```
+find / -size 50M	#find files with 50M size
+find / -size +50M	#find files bigger than 50M size
+find / -size -50M	#find files smaller than 50M size
+```
 
 
 
