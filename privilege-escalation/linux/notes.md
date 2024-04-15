@@ -72,7 +72,15 @@ find / -size 50M	#find files with 50M size
 find / -size +50M	#find files bigger than 50M size
 find / -size -50M	#find files smaller than 50M size
 ```
-
+```
+find / -type d -writable 2>/dev/null		    #writable directories
+find / -type d -perm -222 2>/dev/null		    #at least readable directories 
+find / -type d -perm -o=w 2>/dev/null		    #directories that can be written by anyone at least
+find / -type d -perm -o=x 2>/dev/null		    #world executable directories
+find / -type f -perm -4000 2>/dev/null		  #files with suid permission
+find / -type f -perm -u=s 2>/dev/null		    #files with suid permission
+find / -type f -perm -4000 -ls 2>/dev/null  #files with suid permission (long listing)
+```
 
 
 
