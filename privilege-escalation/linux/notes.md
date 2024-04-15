@@ -92,6 +92,33 @@ find / -type f -perm -4000 -ls 2>/dev/null  #files with suid permission (long li
 
 
 
+### SUID and SGID
 
+```
+find / -type f -perm -4000 -ls 2>/dev/null #print suid files and also sgid fils
+find / -type f -perm -2000 -ls 2>/dev/null #print only sgid files
+```
 
+```
+SUID (SetUID):
+        Octal value: 4000
+        Binary representation: 10000000000
+        Effect: When set on an executable file, the file is executed with the privileges of the file owner (rather than the user executing the file).
 
+SGID (SetGID):
+        Octal value: 2000
+        Binary representation: 01000000000
+        Effect:
+            When set on an executable file, the file is executed with the privileges of the group that owns the file.
+            When set on a directory, files created within the directory inherit the group ownership of the directory (rather than the primary group of the user creating the file).
+```
+
+#### Abusing SUID permission on `base64`
+
+The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/base64/)
+```
+sudo install -m =xs $(which base64) .
+
+LFILE=file_to_read
+./base64 "$LFILE" | base64 --decode
+```
