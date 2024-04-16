@@ -145,6 +145,8 @@ setuid(0);
 system("/bin/bash");
 }
 ```
+- `unsetenv("LD_PRELOAD");`: This line unsets the environment variable LD_PRELOAD. This variable is used to specify shared libraries that should be loaded before all others. Unsetting it here effectively removes any preload libraries, which could be used for library injection attacks.
+- When a shared object (shared library) is loaded into memory by a program, the `_init()` function, if present in the shared object, will be automatically executed by the dynamic linker.
 
 ```
 gcc -fPIC -shared -o shell.so shell.c -nostartfiles
