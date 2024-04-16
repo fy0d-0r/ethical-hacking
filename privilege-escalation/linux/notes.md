@@ -119,6 +119,9 @@ int rand(){
 ```
 gcc -shared -fPIC unrandom.c -o unrandom.so
 ```
+- `-shared`: This option tells GCC to generate a shared object file (.so). Shared objects are dynamic libraries that can be loaded into a program at runtime
+- `-fPIC`: This option stands for "Position Independent Code." It tells the compiler to generate position-independent code, which is necessary for creating shared libraries. PIC allows the code to be loaded at any memory address without modification, enabling it to be shared between multiple programs. It instructs the compiler to generate code that can be executed regardless of its absolute address in memory. This is particularly useful for creating shared libraries (dynamic libraries) that can be loaded into memory at any address during runtime. This is essential for shared libraries because they can be loaded into different memory locations for different processes. Code generated with -fPIC typically uses relative addressing modes rather than absolute addresses. This allows the code to refer to data and functions relative to the current instruction pointer, rather than specific memory addresses.
+
 
 ```
 LD_PRELOAD=$PWD/unrandom.so ./random_nums
