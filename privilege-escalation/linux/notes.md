@@ -128,8 +128,7 @@ gcc -shared -fPIC unrandom.c -o unrandom.so
 ```
 LD_PRELOAD=$PWD/unrandom.so ./random_nums
 ```
-
-
+Our program failed to generate random numbers, because it did not use the “real” rand(), but the one we provided – which returns 42 every time.
 
 #### Abusing `sudo` permission on `nano`
 The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/nano/)
