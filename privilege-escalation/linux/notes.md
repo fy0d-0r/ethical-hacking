@@ -197,3 +197,25 @@ Be sure to change `py` to `py3` if the target system is running on python3.
 
 ### Cron Jobs
 
+Cron jobs run processes with the privilege of their owners and not the current user.
+To view cron jobs configured on the system.
+```
+cat /etc/crontab
+```
+We can hijack one of these processes configured in the `contab` if we can edit the `$PATH` environmental variable by putting an executable script with the same name as the one in the `crontab` file inside directory of our choice added to `$PATH`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
