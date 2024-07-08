@@ -85,6 +85,11 @@ find / -type f -perm -4000 -ls 2>/dev/null  #files with suid permission (long li
 - [Linux Smart Enumeration](https://github.com/diego-treitos/linux-smart-enumeration)
 - [Linux Priv Checker](https://github.com/linted/linuxprivchecker)
 
+### root owned files with write permission
+```
+find / -type f -name * -perm -220 -ls 2>/dev/null | grep root
+```
+
 ### Sudo Privileges
 
 #### Checking For `sudo` Permissions
